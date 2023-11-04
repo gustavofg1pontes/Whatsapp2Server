@@ -44,15 +44,7 @@ public class UserServerHandler extends Thread {
             }
         } catch (IOException e) {
             System.out.println("User disconnected: " + user.getName());
-            final Gson gson = new GsonBuilder().create();
-            final String json = gson.toJson(
-                    new Message(user.getName() + " disconnected", "Server"));
-
-            for (User u : Server.getUsers()) {
-                if (u.getId() != user.getId()) {
-                    u.getPrintWriter().println(json);
-                }
-            }
+            broadcastMessage(new User("Server", null), user.getName() + " disconnected");
         } finally {
             try {
                 if(socket != null && !socket.isClosed())
